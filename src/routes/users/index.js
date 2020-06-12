@@ -19,4 +19,9 @@ MainUserRouter.get("/", (req, res) => {
 MainUserRouter.route("/register")
 	.get(require("./userRegister"))
 	.post(require("./userRegister"));
+
+MainUserRouter.route("/login")
+	.get(require("./userLogin"))
+	.post(require("./userLogin"));
+
 module.exports = MainUserRouter;

@@ -8,6 +8,9 @@
  * tags:
  *- name: "user"
  *   description: "Everything about your user"
+ *   externalDocs:
+ *    description: Firebase
+ *    url: https://firebase.google.com/docs/
  *- name: "property"
  *   description: "Everything about the property "
  *- name: "booking"

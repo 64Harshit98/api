@@ -13,7 +13,7 @@ const bcrypt = require("bcryptjs");
  *   get:
  *    tags:
  *    - "user"
- *    summary: To check inside user registratiopn
+ *    summary: To check inside user registration
  *    responses:
  *     "200":
  *      description: In user registration
@@ -103,7 +103,7 @@ router.post("/register", async (req, res) => {
 		}
 		console.error(error);
 		// [END_EXCLUDE]
-		res.status(500).send(error);
+		res.status(500).send(errorMessage);
 	}
 });
 module.exports = router;
