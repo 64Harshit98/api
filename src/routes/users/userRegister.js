@@ -62,10 +62,6 @@ router.post("/register", async (req, res) => {
 	const emailExist = await userModel.findOne({ email: req.body.email });
 	if (emailExist) return res.status(409).send("Email already exists");
 
-	// Hashing the password
-	const salt = await bcrypt.genSalt(13);
-	const hashedPassword = await bcrypt.hash(req.body.password, salt);
-
 	try {
 		// SigningUp in firebase
 		const currentUser = await firebaseapp
@@ -84,7 +80,6 @@ router.post("/register", async (req, res) => {
 				const user = new userModel({
 					name: req.body.name,
 					email: req.body.email,
-					password: hashedPassword,
 					firebase_id: suser.uid,
 				});
 				const savedUser = user.save();
