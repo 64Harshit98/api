@@ -20,7 +20,12 @@ app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 // MongoDB connectioon using mongoose
 mongoose.connect(
 	process.env.DB_HOST,
-	{ useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true },
+	{
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useCreateIndex: true,
+		useFindAndModify: false,
+	},
 	() => console.log("Data active")
 );
 
