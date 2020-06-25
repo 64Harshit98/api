@@ -13,6 +13,11 @@ const swaggerOptions = require("./src/configs/swaggerOptions.config");
 const app = express();
 dotenv.config();
 
+// Launch listening server on port 8080
+app.listen(process.env.PORT, function () {
+	console.log("App listening!");
+});
+
 // Swagger Documentation
 const swaggerDocs = swaggerJsDoc(swaggerOptions);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocs));
@@ -41,9 +46,4 @@ app.use((req, res, next) => {
 		status: 404,
 		error: "Not Found",
 	});
-});
-
-// Launch listening server on port 8080
-app.listen(process.env.PORT, function () {
-	console.log("App listening!");
 });

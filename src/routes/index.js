@@ -11,9 +11,9 @@
  *   externalDocs:
  *    description: Firebase
  *    url: https://firebase.google.com/docs/
- *- name: "property"
+ *- name: "Property"
  *   description: "Everything about the property "
- *- name: "booking"
+ *- name: "Booking"
  *   description: "Everything about the booking."
  *   externalDocs:
  *    description: "Find out more"
