@@ -111,7 +111,7 @@ route.put("/profile/:userId", async (req, res) => {
  *   delete:
  *    tags:
  *    - "user"
- *    summary: Use for deleting th user
+ *    summary: Use for deleting th user, not to be used
  *    parameters:
  *     - in: path
  *       name: userId

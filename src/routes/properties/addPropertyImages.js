@@ -11,6 +11,11 @@ const s3 = require("../../middlewares/AWS/s3Upload");
  *    tags:
  *    - "Property"
  *    summary: To check inside Property add images
+ *    parameters:
+ *     - in: path
+ *       name: propId
+ *       required: true
+ *       description: The property Id for selecting property
  *    responses:
  *     "200":
  *      description: In Property add images
@@ -27,6 +32,11 @@ route.get("/images/:propId", (req, res) => {
  *    tags:
  *    - "Property"
  *    summary: Use for property adding images
+ *    parameters:
+ *     - in: path
+ *       name: propId
+ *       required: true
+ *       description: The property Id for selecting property
  *    requestBody:
  *     required: true
  *    content:
@@ -53,8 +63,10 @@ route.post("/images/:propId", upload, async (req, res) => {
 					// Setting the params for the ss3 buckeet
 					const params = {
 						Bucket: process.env.AWS_BUCKET_PROPIMAGES,
-						acl: "public-read",
-						Key: `${property.propName}_${Date.now()}.${fileType}`,
+						acl: "public-read-write",
+						Key: `${property.propName}/${
+							property.propName
+						}_${Date.now()}.${fileType}`,
 						Body: file.buffer,
 					};
 
@@ -71,13 +83,11 @@ route.post("/images/:propId", upload, async (req, res) => {
 
 				.then((datas) => {
 					// Saving the links to mongoDb
-					const images = datas.map((data) =>
-						property.photos.push(data.Location)
-					);
-					console.log(images);
-					const updatedProperty = property.save();
+					datas.map((data) => property.photos.push(data.Location));
+
+					property.save();
 					// Returning the updated document
-					res.status(200).send(updatedProperty);
+					res.status(200).send(property);
 				})
 				.catch((err) => {
 					// Error when images not uploaded to s3
@@ -93,4 +103,62 @@ route.post("/images/:propId", upload, async (req, res) => {
 	}
 });
 
+/**
+ * @swagger
+ * paths:
+ *  /api/property/images/{propId}:
+ *   delete:
+ *    tags:
+ *    - "Property"
+ *    summary: Use for deleting property images
+ *    parameters:
+ *     - in: path
+ *       name: propId
+ *       required: true
+ *       description: The property Id for selecting property
+ *    requestBody:
+ *     required: true
+ *    content:
+ *     application/json:
+ *      schema:
+ *       $ref: '#/components/schemas/Property'
+ *    responses:
+ *     "201":
+ *      description: successfully deleted images of property
+ */
+route.delete("/images/:propId", (req, res) => {
+	// Defining the object array
+	const images = req.body.deleteImages;
+	var objects = [];
+	images.map((image) => {
+		var temp = image.split("/");
+		const key = `${temp[temp.length - 2]}/${temp[temp.length - 1]}`;
+		objects.push({ Key: key });
+	});
+
+	const params = {
+		Bucket: process.env.AWS_BUCKET_PROPIMAGES,
+		Delete: {
+			Objects: objects,
+		},
+	};
+
+	s3.deleteObjects(params, function (err, data) {
+		if (err) {
+			res.status(400).send(err);
+		} else {
+			console.log(data);
+			// Finding the property and deleting from mongoDB
+			propertyModel.findById(req.params.propId, function (err, property) {
+				if (err) {
+					res.status(400).send(err);
+				} else {
+					images.map((image) => property.photos.pull(image));
+					property.save();
+					res.status(200).send(property);
+				}
+			});
+		}
+	});
+});
 module.exports = route;
