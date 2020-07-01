@@ -13,6 +13,9 @@
  *    url: https://firebase.google.com/docs/
  *- name: "Property"
  *   description: "Everything about the property "
+ *   externalDocs:
+ *    description: AWS
+ *    url: https://docs.aws.amazon.com/
  *- name: "Booking"
  *   description: "Everything about the booking."
  *   externalDocs:

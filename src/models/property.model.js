@@ -1,5 +1,10 @@
 const mongoose = require("mongoose");
+
+// Importing sub Schemas
 const addressSchema = require("./schemas/adress.schema");
+const contactInfoSchema = require("./schemas/contactInfo.schema");
+const propCharacteristicsSchema = require("./schemas/propCharacteristics.schema");
+
 /**
  * @swagger
  * components:
@@ -8,7 +13,6 @@ const addressSchema = require("./schemas/adress.schema");
  *    type: object
  *    required:
  *     - propName
- *     -
  *    properties:
  *     propName:
  *      type: String
@@ -33,15 +37,23 @@ const addressSchema = require("./schemas/adress.schema");
  *     propChar:
  *      type: object
  *     address:
- *      $ref: '#/components/schemas/address'
- *     ameneties:
- *      type: object
+ *      $ref: '#/components/schemas/Address'
  *     photos:
  *      type: object
+ *     contactDetails:
+ *      type: object
+ *      properties:
+ *       owner:
+ *        $ref: '#/components/schemas/ContactInfo'
+ *       manager:
+ *        $ref: '#/components/schemas/ContactInfo'
+ *       company:
+ *        $ref: '#/components/schemas/ContactInfo'
  *     created:
  *      type: String
  *      format: date
  */
+
 const propertySchema = new mongoose.Schema({
 	propName: {
 		type: String,
@@ -69,6 +81,20 @@ const propertySchema = new mongoose.Schema({
 	},
 	photos: {
 		type: [String],
+	},
+	propCharacteristics: {
+		type: propCharacteristicsSchema,
+	},
+	contactDetails: {
+		owner: {
+			type: contactInfoSchema,
+		},
+		manager: {
+			type: contactInfoSchema,
+		},
+		company: {
+			type: contactInfoSchema,
+		},
 	},
 	created: {
 		type: Date,

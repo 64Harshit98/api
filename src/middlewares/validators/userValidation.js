@@ -1,5 +1,4 @@
 const Joi = require("@hapi/joi");
-const { number } = require("@hapi/joi");
 
 const userRegisterValidation = (data) => {
 	// Define Schema to validate

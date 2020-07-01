@@ -15,7 +15,7 @@ dotenv.config();
 
 // Launch listening server on port 8080
 app.listen(process.env.PORT, function () {
-	console.log("App listening!" + Date.now());
+	console.log("App listening!" + Date.now);
 });
 
 // Swagger Documentation

@@ -59,14 +59,12 @@ route.post("/images/:propId", upload, async (req, res) => {
 				req.files.map((file) => {
 					let myFile = file.originalname.split(".");
 					const fileType = myFile[myFile.length - 1];
-
+					const propName = property.propName.replace(/ /g, "");
 					// Setting the params for the ss3 buckeet
 					const params = {
 						Bucket: process.env.AWS_BUCKET_PROPIMAGES,
 						acl: "public-read-write",
-						Key: `${property.propName}/${
-							property.propName
-						}_${Date.now()}.${fileType}`,
+						Key: `${propName}/${propName}_${Date.now()}.${fileType}`,
 						Body: file.buffer,
 					};
 

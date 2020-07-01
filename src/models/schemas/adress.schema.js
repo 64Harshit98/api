@@ -4,12 +4,10 @@ const mongoose = require("mongoose");
  * @swagger
  * components:
  *  schemas:
- *   address:
+ *   Address:
  *    type: object
  *    required:
- *    - city
- *    - state
- *    - pincode
+ *    - location
  *    properties:
  *     locality:
  *      type: String
@@ -46,6 +44,9 @@ const addressSchema = new mongoose.Schema({
 		type: Number,
 		minlength: 6,
 		maxlength: 6,
+	},
+	landmark: {
+		type: String,
 	},
 	location: {
 		type: {
