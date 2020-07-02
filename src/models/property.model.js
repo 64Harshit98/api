@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const addressSchema = require("./schemas/adress.schema");
 const contactInfoSchema = require("./schemas/contactInfo.schema");
 const propCharacteristicsSchema = require("./schemas/propCharacteristics.schema");
+const propFacilitiesSchema = require("./schemas/propFacilities.schema");
+const roomDetailsSchema = require("./schemas/roomDetails.schema");
 
 /**
  * @swagger
@@ -34,12 +36,16 @@ const propCharacteristicsSchema = require("./schemas/propCharacteristics.schema"
  *     tenantType:
  *      type: String
  *      description: It can be Male, Female or Coliving
- *     propChar:
- *      type: object
  *     address:
  *      $ref: '#/components/schemas/Address'
  *     photos:
- *      type: object
+ *      type: array
+ *     propCharacteristics:
+ *      $ref: '#/components/schemas/PropCharechteristics'
+ *     propFacilities:
+ *      $ref: '#/components/schemas/PropFacilities'
+ *     roomdetails:
+ *      $ref: '#/components/schemas/RoomDetails'
  *     contactDetails:
  *      type: object
  *      properties:
@@ -85,6 +91,8 @@ const propertySchema = new mongoose.Schema({
 	propCharacteristics: {
 		type: propCharacteristicsSchema,
 	},
+	propFacilities: propFacilitiesSchema,
+	roomDetails: roomDetailsSchema,
 	contactDetails: {
 		owner: {
 			type: contactInfoSchema,

@@ -2,6 +2,8 @@ const Joi = require("@hapi/joi");
 const addressSchema = require("./joiSchemas/addressSchema");
 const propCharacteristicSchema = require("./joiSchemas/propCharacteristicSchema");
 const contactInfoSchema = require("./joiSchemas/contactInfoSchema");
+const propFacilitiesSchema = require("./joiSchemas/propFacilitiesSchema");
+const roomDetailsSchema = require("./joiSchemas/roomDetailsSchema");
 
 const propertyValidation = (data) => {
 	// Define Schema to validate
@@ -14,6 +16,8 @@ const propertyValidation = (data) => {
 		// Address schema
 		address: addressSchema,
 		propCharacteristics: propCharacteristicSchema,
+		propFacilities: propFacilitiesSchema,
+		roomDetails: roomDetailsSchema,
 		contactDetails: Joi.object({
 			owner: contactInfoSchema.required(),
 			manager: contactInfoSchema,
