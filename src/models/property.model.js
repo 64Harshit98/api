@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const shortid = require("shortid");
 
 // Importing sub Schemas
 const addressSchema = require("./schemas/adress.schema");
@@ -82,27 +83,30 @@ const propertySchema = new mongoose.Schema({
 		enum: ["Male", "Female", "Coliving"],
 		default: "Coliving",
 	},
-	address: {
-		type: addressSchema,
+	stayCode: {
+		type: String,
+		default: `#Stay ${shortid
+			.generate()
+			.substr(0, 3)
+			.toUpperCase()}${Date.now().toString().substr(10)}`,
 	},
+	address: addressSchema,
 	photos: {
 		type: [String],
 	},
-	propCharacteristics: {
-		type: propCharacteristicsSchema,
-	},
+	propCharacteristics: propCharacteristicsSchema,
 	propFacilities: propFacilitiesSchema,
 	roomDetails: roomDetailsSchema,
 	contactDetails: {
-		owner: {
-			type: contactInfoSchema,
-		},
-		manager: {
-			type: contactInfoSchema,
-		},
-		company: {
-			type: contactInfoSchema,
-		},
+		owner: contactInfoSchema,
+		manager: contactInfoSchema,
+		company: contactInfoSchema,
+	},
+	ownerId: {
+		type: String,
+	},
+	userAccess: {
+		type: [String],
 	},
 	created: {
 		type: Date,

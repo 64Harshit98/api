@@ -23,6 +23,8 @@ const propertyValidation = (data) => {
 			manager: contactInfoSchema,
 			company: contactInfoSchema,
 		}),
+		ownerId: Joi.string(),
+		userAccess: Joi.array().items(Joi.string()),
 		created: Joi.date(),
 	});
 	// Return value and error

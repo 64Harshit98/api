@@ -16,6 +16,9 @@ MainPropertyRouter.get("/", (req, res) => {
 	res.status(200).send("In Property Router!🏠");
 });
 
+// For getting all properties
+MainPropertyRouter.route("/all").get(require("./property"));
+
 // To add property
 MainPropertyRouter.route("/add")
 	.get(require("./addProperty"))
@@ -27,7 +30,7 @@ MainPropertyRouter.route("/:userId")
 	.put(require("./updateProperty"))
 	.delete(require("./updateProperty"));
 
-// To CRUD images of a property
+// To CRD images of a property
 MainPropertyRouter.route("/images/:propId")
 	.get(require("./addPropertyImages"))
 	.post(require("./addPropertyImages"))
