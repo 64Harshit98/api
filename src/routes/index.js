@@ -11,7 +11,11 @@
  *   externalDocs:
  *    description: Firebase
  *    url: https://firebase.google.com/docs/
+<<<<<<< HEAD
  *- name: "Property"
+=======
+ *- name: "property"
+>>>>>>> master
  *   description: "Everything about the property "
  *   externalDocs:
  *    description: AWS

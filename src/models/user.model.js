@@ -9,6 +9,7 @@ const mongoose = require("mongoose");
  *        required:
  *          - name
  *          - email
+ *          - password
  *        properties:
  *          name:
  *           type: string
@@ -34,6 +35,7 @@ const mongoose = require("mongoose");
  *        example:
  *           name: Alexander
  *           email: fake@email.com
+ *           password: testpassword
  */
 const userSchema = new mongoose.Schema({
 	name: {
