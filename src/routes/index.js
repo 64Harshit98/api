@@ -19,7 +19,7 @@
  *- name: "Booking"
  *   description: "Everything about the booking."
  *   externalDocs:
- *    description: "Find out more"
+ *    description: "Paymnet Gateway"
  *    url: "http://swagger.io"
  */
 
