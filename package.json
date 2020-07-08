@@ -4,6 +4,7 @@
 	"description": "Api to handle all the backend operations",
 	"main": "server.js",
 	"scripts": {
+		"start": "node server.js",
 		"dev": "nodemon server.js"
 	},
 	"author": "Harshit Singh",
