@@ -30,14 +30,18 @@ const bookingModel = require("../../models/booking.model");
  */
 route.put("/cancel/:bookingId", async (req, res) => {
 	// Check booking Exists
-	const booking = await bookingModel.findOne({ _id: req.params.bookingId });
+	try {
+		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
 
-	if (booking.paid.status === false && booking.userId == req.body.userId) {
-		booking.set({ cancelled: { status: true, reason: req.body.reason } });
-		booking.save();
-		res.status(201).send(booking);
-	} else {
-		res.status(404).send("Not found Paid contact owner");
+		if (booking.paid.status === false && booking.userId == req.body.userId) {
+			booking.set({ cancelled: { status: true, reason: req.body.reason } });
+			booking.save();
+			res.status(201).send(booking);
+		} else {
+			res.status(404).send("Not found Paid contact owner");
+		}
+	} catch (error) {
+		res.status(400).send(error);
 	}
 });
 /**
@@ -67,14 +71,18 @@ route.put("/cancel/:bookingId", async (req, res) => {
  */
 route.put("/notavailable/:bookingId", async (req, res) => {
 	// Check booking Exists
-	const booking = await bookingModel.findOne({ _id: req.params.bookingId });
+	try {
+		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
 
-	if (booking.propId == req.body.propId) {
-		booking.set({ cancelled: { status: true, reason: "Not Available" } });
-		booking.save();
-		res.status(201).send(booking);
-	} else {
-		res.status(404).send("Not found Paid contact owner");
+		if (booking.propId == req.body.propId) {
+			booking.set({ cancelled: { status: true, reason: "Not Available" } });
+			booking.save();
+			res.status(201).send(booking);
+		} else {
+			res.status(404).send("Not found Paid contact owner");
+		}
+	} catch (error) {
+		res.status(400).send(error);
 	}
 });
 module.exports = route;

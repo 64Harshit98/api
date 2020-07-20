@@ -30,10 +30,10 @@ const {
  */
 route.post("/create", async (req, res) => {
 	// Validating request body
-	const { error } = bookingValidation(req.body);
+	const { error, value } = bookingValidation(req.body);
 	if (error) return res.status(407).send(error);
 	// Creating a booking
-	const booking = new bookingModel(req.body);
+	const booking = new bookingModel(value);
 	try {
 		const savedBooking = await booking.save();
 		res.status(201).send(savedBooking);
