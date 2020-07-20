@@ -21,10 +21,16 @@
  *   externalDocs:
  *    description: "Paymnet Gateway"
  *    url: "http://swagger.io"
+ *- name: "Visit"
+ *   description: "Everything about the visit Scheduling."
+ *   externalDocs:
+ *    description: "Paymnet Gateway"
+ *    url: "http://swagger.io"
  */
 
 module.exports = function (app) {
 	app.use("/api/user", require("./users"));
 	app.use("/api/property", require("./properties"));
 	app.use("/api/booking", require("./bookings"));
+	app.use("/api/visit", require("./visits"));
 };

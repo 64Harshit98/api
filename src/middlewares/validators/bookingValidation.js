@@ -1,5 +1,4 @@
 const Joi = require("@hapi/joi");
-const { schema } = require("../../models/booking.model");
 
 const bookingValidation = (data) => {
 	const schema = Joi.object({
