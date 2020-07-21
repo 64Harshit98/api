@@ -6,7 +6,7 @@
 /**
  * @swagger
  * tags:
- *- name: "user"
+ *- name: "User"
  *   description: "Everything about your user"
  *   externalDocs:
  *    description: Firebase

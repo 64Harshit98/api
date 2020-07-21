@@ -1,52 +1,33 @@
 const route = require("express").Router();
-const {
-	userLoginValidation,
-} = require("../../middlewares/validators/userValidation");
+const { userLoginValidation } = require("../../middlewares/validators/userValidation");
 const userModel = require("../../models/user.model");
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
+const { sendEmailVerification } = require("../../middlewares/firebase/verificationEmail");
+const { createToken } = require("../../middlewares/auth/createToken");
 
-/**
- * @swagger
- * paths:
- *  /api/user/login:
- *   get:
- *    tags:
- *    - "user"
- *    summary: To check inside user login
- *    responses:
- *     "200":
- *      description: In user login
- */
-route.get("/login", (req, res) => {
-	res.status(200).send("In user login 🗝");
-});
-
-// Verification email
-function sendEmailVerification() {
-	// [START sendemailverification]
-	firebaseapp
-		.auth()
-		.currentUser.sendEmailVerification()
-		.then(function () {
-			// Email Verification sent!
-			// [START_EXCLUDE]
-			console.info("Email Verification Sent!");
-			// [END_EXCLUDE]
-		});
-	// [END sendemailverification]
-}
 /**
  * @swagger
  * paths:
  *  /api/user/login:
  *   post:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for users login using firebase email auth
  *    requestBody:
  *     required: true
- *    content:
- *     application/json:
+ *     content:
+ *      application/json:
+ *       schema:
+ *        type: object
+ *        properties:
+ *         email:
+ *          type: string
+ *          format: $email
+ *         password:
+ *          type: string
+ *        example:
+ *           email: fake@email.com
+ *           password: testpassword
  *    responses:
  *     "201":
  *      description: successfully login user
@@ -57,7 +38,7 @@ route.post("/login", async (req, res) => {
 	if (error) return res.status(400).send(error.details[0].message);
 
 	// Check user in database
-	const user = await userModel.findOne({ email: req.body.email });
+	const user = await userModel.findOne({ email: req.body.email }, "_id userType name");
 	if (!user) return res.status(400).send("User not found");
 
 	// Logging in using firebase
@@ -66,17 +47,19 @@ route.post("/login", async (req, res) => {
 			.auth()
 			.signInWithEmailAndPassword(req.body.email, req.body.password);
 
-		//console.info(currentUser.user);
+		// console.info(currentUser.user);
 		if (currentUser.user.emailVerified) {
-			res.status(201).send(user);
+			const token = await createToken(user);
+
+			res.status(200).send("LoggedIn 👉 : \t" + token);
 		} else {
 			sendEmailVerification();
+
 			res.status(401).send("Verify your email id!");
 		}
 	} catch (error) {
-		var errorMessage = error.message;
 		console.error(error);
-		res.status(500).send(error);
+		res.status(408).send(error.message);
 	}
 });
 

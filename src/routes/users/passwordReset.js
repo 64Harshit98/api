@@ -1,6 +1,6 @@
 const route = require("express").Router();
 const userModel = require("../../models/user.model");
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 
 /**
  * @swagger
@@ -8,7 +8,7 @@ const firebaseapp = require("../../middlewares/firebaseapp");
  *  /api/user/passwordreset/{userId}:
  *   put:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for reseting the password with userId
  *    parameters:
  *     - in: path
@@ -43,7 +43,7 @@ route.put("/passwordreset/:userId", async (req, res) => {
  *  /api/user/forgotpassword/{userEmail}:
  *   put:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for reseting the password with email
  *    parameters:
  *     - in: path

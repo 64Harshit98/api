@@ -1,31 +1,35 @@
 const route = require("express").Router();
 const userModel = require("../../models/user.model");
-const {
-	userProfileValidation,
-} = require("../../middlewares/validators/userValidation");
+const { userProfileValidation } = require("../../middlewares/validators/userValidation");
 
-const firebaseapp = require("../../middlewares/firebaseapp");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 /**
  * @swagger
  * paths:
  *  /api/user/profiles:
  *   get:
  *    tags:
- *    - "user"
- *    summary: Use for users data
+ *    - "User"
+ *    summary: Use for users data by admin
+ *    parameters:
+ *     - in: header
+ *       name: auth
  *    responses:
  *     "200":
  *      description: all data from MongoDb
  */
-route.get("/profiles", async (req, res) => {
-	// Extracting all users in database
-	await userModel.find({}, function (error, usersData) {
-		if (error) {
-			res.status(500).send(error);
-		} else {
-			res.status(200).send(usersData);
-		}
-	});
+route.get("/profiles", verifyToken, async (req, res) => {
+	if (req.userType == "admin") {
+		// Extracting all users in database
+		await userModel.find({}, function (error, usersData) {
+			if (error) {
+				res.status(500).send(error);
+			} else {
+				res.status(200).send(usersData);
+			}
+		});
+	}
+	res.status(403).send("Forbidden");
 });
 
 /**
@@ -34,29 +38,30 @@ route.get("/profiles", async (req, res) => {
  *  /api/user/profile/{userId}:
  *   get:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for finding user with the given user id
  *    parameters:
  *     - in: path
  *       name: userId
+ *     - in: header
+ *       name: auth
  *    responses:
  *     "200":
  *      description: user found
  */
-route.get("/profile/:userId", async (req, res) => {
+route.get("/profile/:userId", verifyToken, async (req, res) => {
 	// Checking userId exists
-	if (req.params.userId) {
+	if (req.params.userId == req._id) {
 		// Extracting user with the given userId
-		await userModel.find({ _id: req.params.userId }, function (
-			error,
-			userData
-		) {
+		await userModel.find({ _id: req.params.userId }, function (error, userData) {
 			if (error) {
 				res.status(404).send("User not found");
 			} else {
 				res.status(200).send(userData);
 			}
 		});
+	} else {
+		res.status(403).send("Forbidden");
 	}
 });
 
@@ -66,16 +71,20 @@ route.get("/profile/:userId", async (req, res) => {
  *  /api/user/profile/{userId}:
  *   put:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for user profile update
  *    parameters:
  *     - in: path
  *       name: userId
+ *     - in: header
+ *       name: auth
  *    responses:
  *     "200":
  *      description: user updated
  */
-route.put("/profile/:userId", async (req, res) => {
+route.put("/profile/:userId", verifyToken, async (req, res) => {
+	// Checking the user is authorized or not
+	if (req._id != req.params.userId) return res.status(403).send("Forbidden");
 	// Find and update the user with the given user id
 	const { error } = userProfileValidation(req.body);
 	if (error) return res.status(400).send(error.details[0].message);
@@ -110,7 +119,7 @@ route.put("/profile/:userId", async (req, res) => {
  *  /api/user/profile/{userId}:
  *   delete:
  *    tags:
- *    - "user"
+ *    - "User"
  *    summary: Use for deleting th user, not to be used
  *    parameters:
  *     - in: path
@@ -122,7 +131,7 @@ route.put("/profile/:userId", async (req, res) => {
 route.delete("/profile/:userId", async (req, res) => {
 	const user = await userModel.findOne({ _id: req.params.userId });
 	if (user) {
-		user.remove();
+		// user.remove();
 		res.status(404).send(user);
 	} else {
 		res.status(404).send("User does not exist ");

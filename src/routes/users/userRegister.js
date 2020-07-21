@@ -1,54 +1,23 @@
 const router = require("express").Router();
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 const userModel = require("../../models/user.model");
-const {
-	userRegisterValidation,
-} = require("../../middlewares/validators/userValidation");
-const bcrypt = require("bcryptjs");
+const { userRegisterValidation } = require("../../middlewares/validators/userValidation");
+const { sendEmailVerification } = require("../../middlewares/firebase/verificationEmail");
 
-/**
- * @swagger
- * paths:
- *  /api/user/register:
- *   get:
- *    tags:
- *    - "user"
- *    summary: To check inside user registration
- *    responses:
- *     "200":
- *      description: In user registration
- */
-router.get("/register", (req, res) => {
-	res.status(200).send("In user Register 👤");
-});
-
-function sendEmailVerification() {
-	// [START sendemailverification]
-	firebaseapp
-		.auth()
-		.currentUser.sendEmailVerification()
-		.then(function () {
-			// Email Verification sent!
-			// [START_EXCLUDE]
-			console.info("Email Verification Sent!");
-			// [END_EXCLUDE]
-		});
-	// [END sendemailverification]
-}
 /**
  * @swagger
  * paths:
  *  /api/user/register:
  *   post:
  *    tags:
- *    - "user"
- *    summary: Use for users registration using firebase email auth
+ *    - "User"
+ *    summary: Use for users registration
  *    requestBody:
  *     required: true
- *    content:
- *     application/json:
- *      schema:
- *       $ref: '#/components/schemas/User'
+ *     content:
+ *      application/json:
+ *       schema:
+ *        $ref: '#/components/schemas/User'
  *    responses:
  *     "201":
  *      description: successfully created user
@@ -76,7 +45,7 @@ router.post("/register", async (req, res) => {
 		firebaseapp.auth().onAuthStateChanged((suser) => {
 			if (suser) {
 				// User logged in already or has just logged in.
-				console.log(suser.uid);
+				// console.log(suser.uid);
 				const user = new userModel({
 					name: req.body.name,
 					email: req.body.email,
