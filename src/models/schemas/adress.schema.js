@@ -30,35 +30,37 @@ const mongoose = require("mongoose");
  *        items:
  *         type: integer
  */
-const addressSchema = new mongoose.Schema({
-	locality: {
-		type: String,
-	},
-	city: {
-		type: String,
-	},
-	state: {
-		type: String,
-	},
-	pincode: {
-		type: Number,
-		minlength: 6,
-		maxlength: 6,
-	},
-	landmark: {
-		type: String,
-	},
-	location: {
-		type: {
+const addressSchema = new mongoose.Schema(
+	{
+		locality: {
 			type: String,
-			enum: ["Point"],
-			required: true,
 		},
-		coordinates: {
-			type: [Number],
-			required: true,
+		city: {
+			type: String,
+		},
+		state: {
+			type: String,
+		},
+		pincode: {
+			type: Number,
+			minlength: 6,
+			maxlength: 6,
+		},
+		landmark: {
+			type: String,
+		},
+		location: {
+			type: {
+				type: String,
+				default: "Point",
+				enum: ["Point"],
+			},
+			coordinates: {
+				type: [Number],
+			},
 		},
 	},
-});
+	{ _id: false }
+);
 
 module.exports = addressSchema;

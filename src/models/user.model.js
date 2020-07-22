@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema({
 	},
 	userType: {
 		type: String,
-		enum: ["tenant", "owner", "admin"],
+		enum: ["tenant", "propOwner", "admin"],
 		default: "tenant",
 	},
 	phone: {

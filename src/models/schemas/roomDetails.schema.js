@@ -42,37 +42,43 @@ const { array } = require("@hapi/joi");
  *      description: this will consist of price and name of any extra amenity/ies
  */
 
-const staySchema = mongoose.Schema({
-	roomType: {
-		type: String,
+const staySchema = mongoose.Schema(
+	{
+		roomType: {
+			type: String,
+		},
+		price: {
+			type: Number,
+		},
+		priceAC: {
+			type: Number,
+		},
+		securityAmt: {
+			type: String,
+		},
+		bathroom: {
+			type: String,
+		},
 	},
-	price: {
-		type: Number,
-	},
-	priceAC: {
-		type: Number,
-	},
-	securityAmt: {
-		type: String,
-	},
-	bathroom: {
-		type: String,
-	},
-});
+	{ _id: false }
+);
 
-const roomDetailsSchema = new mongoose.Schema({
-	amenities: {
-		type: [String],
+const roomDetailsSchema = new mongoose.Schema(
+	{
+		amenities: {
+			type: [String],
+		},
+		bathroomAmenities: {
+			type: [String],
+		},
+		longStay: [staySchema],
+		shortStay: [staySchema],
+		extraAmenities: {
+			type: Map,
+			of: Number,
+		},
 	},
-	bathroomAmenities: {
-		type: [String],
-	},
-	longStay: [staySchema],
-	shortStay: [staySchema],
-	extraAmenities: {
-		type: Map,
-		of: Number,
-	},
-});
+	{ _id: false }
+);
 
 module.exports = roomDetailsSchema;

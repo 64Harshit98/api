@@ -56,6 +56,8 @@ const roomDetailsSchema = require("./schemas/roomDetails.schema");
  *        $ref: '#/components/schemas/ContactInfo'
  *       company:
  *        $ref: '#/components/schemas/ContactInfo'
+ *     published:
+ *      type: boolean
  *     created:
  *      type: String
  *      format: date
@@ -85,10 +87,9 @@ const propertySchema = new mongoose.Schema({
 	},
 	stayCode: {
 		type: String,
-		default: `#Stay ${shortid
-			.generate()
-			.substr(0, 3)
-			.toUpperCase()}${Date.now().toString().substr(10)}`,
+		default: `#Stay ${shortid.generate().substr(0, 3).toUpperCase()}${Date.now()
+			.toString()
+			.substr(10)}`,
 	},
 	address: addressSchema,
 	photos: {
@@ -107,6 +108,10 @@ const propertySchema = new mongoose.Schema({
 	},
 	userAccess: {
 		type: [String],
+	},
+	published: {
+		type: Boolean,
+		default: false,
 	},
 	created: {
 		type: Date,

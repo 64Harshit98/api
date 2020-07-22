@@ -20,19 +20,19 @@ MainPropertyRouter.get("/", (req, res) => {
 MainPropertyRouter.route("/all").get(require("./property"));
 
 // To add property
-MainPropertyRouter.route("/add")
-	.get(require("./addProperty"))
-	.post(require("./addProperty"));
+MainPropertyRouter.route("/add").post(require("./addProperty"));
 
 // To find, update and delete property
-MainPropertyRouter.route("/:userId")
+MainPropertyRouter.route("/:propId")
 	.get(require("./property"))
 	.put(require("./updateProperty"))
 	.delete(require("./updateProperty"));
 
 // To CRD images of a property
 MainPropertyRouter.route("/images/:propId")
-	.get(require("./addPropertyImages"))
 	.post(require("./addPropertyImages"))
 	.delete(require("./addPropertyImages"));
+
+// To publish property
+MainPropertyRouter.route("/publish/:propId").put(require("./updateProperty"));
 module.exports = MainPropertyRouter;

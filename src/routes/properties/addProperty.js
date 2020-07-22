@@ -1,24 +1,8 @@
 const route = require("express").Router();
 const propertyModel = require("../../models/property.model");
-const {
-	propertyValidation,
-} = require("../../middlewares/validators/propertyValidation");
-
-/**
- * @swagger
- * paths:
- *  /api/property/add:
- *   get:
- *    tags:
- *    - "Property"
- *    summary: To check inside Property add
- *    responses:
- *     "200":
- *      description: In Property add
- */
-route.get("/add", (req, res) => {
-	res.status(200).send("Inside add property 🏠");
-});
+const userModel = require("../../models/user.model");
+const { propertyValidation } = require("../../middlewares/validators/propertyValidation");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 /**
  * @swagger
@@ -38,16 +22,35 @@ route.get("/add", (req, res) => {
  *     "201":
  *      description: successfully created property
  */
-route.post("/add", async (req, res) => {
-	// Validating request body
-	const { error, value } = propertyValidation(req.body);
-	if (error) return res.status(400).send(error.details);
-	//else return res.status(200).send(value);
-	// Saving the details in database
-	const property = new propertyModel(req.body);
-	const savedProperty = await property.save();
+route.post("/add", verifyToken, async (req, res) => {
+	if (req._id) {
+		// Validating request body
+		const { error, value } = propertyValidation(req.body);
+		if (error) return res.status(400).send(error.details);
 
-	res.status(201).send(savedProperty);
+		try {
+			// Changing usertype to propOwner if user is default
+			if (req.userType == "tenant") {
+				await userModel.findByIdAndUpdate(
+					req._id,
+					{
+						$set: { userType: "propOwner" },
+					},
+					{ new: true }
+				);
+				console.log("User Type Updated");
+			}
+			// Saving the details in database
+			const property = new propertyModel(value);
+			const savedProperty = await property.save();
+
+			res.status(201).send(savedProperty);
+		} catch (error) {
+			res.status(400).send(error);
+		}
+	} else {
+		res.status(403).send("Forbidden | Login In");
+	}
 });
 
 module.exports = route;

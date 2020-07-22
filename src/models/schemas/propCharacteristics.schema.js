@@ -31,43 +31,46 @@ const mongoose = require("mongoose");
  *
  */
 
-const propCharacteristicsSchema = new mongoose.Schema({
-	description: {
-		type: String,
+const propCharacteristicsSchema = new mongoose.Schema(
+	{
+		description: {
+			type: String,
+		},
+		rules: {
+			type: String,
+		},
+		nearby: {
+			offices: {
+				type: Map,
+				of: Number,
+			},
+			institutes: {
+				type: Map,
+				of: Number,
+			},
+			markets: {
+				type: Map,
+				of: Number,
+			},
+		},
+		distances: {
+			railwayStation: {
+				type: Number,
+			},
+			busStand: {
+				type: Number,
+			},
+			isbt: {
+				type: Number,
+			},
+			airport: {
+				type: Number,
+			},
+			metroStation: {
+				type: Number,
+			},
+		},
 	},
-	rules: {
-		type: String,
-	},
-	nearby: {
-		offices: {
-			type: Map,
-			of: Number,
-		},
-		institutes: {
-			type: Map,
-			of: Number,
-		},
-		markets: {
-			type: Map,
-			of: Number,
-		},
-	},
-	distances: {
-		railwayStation: {
-			type: Number,
-		},
-		busStand: {
-			type: Number,
-		},
-		isbt: {
-			type: Number,
-		},
-		airport: {
-			type: Number,
-		},
-		metroStation: {
-			type: Number,
-		},
-	},
-});
+	{ _id: false }
+);
 module.exports = propCharacteristicsSchema;

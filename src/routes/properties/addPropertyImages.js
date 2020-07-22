@@ -7,27 +7,6 @@ const s3 = require("../../middlewares/AWS/s3Upload");
  * @swagger
  * paths:
  *  /api/property/images/{propId}:
- *   get:
- *    tags:
- *    - "Property"
- *    summary: To check inside Property add images
- *    parameters:
- *     - in: path
- *       name: propId
- *       required: true
- *       description: The property Id for selecting property
- *    responses:
- *     "200":
- *      description: In Property add images
- */
-route.get("/images/:propId", (req, res) => {
-	res.status(200).send("In Add images 📷" + req.params);
-});
-
-/**
- * @swagger
- * paths:
- *  /api/property/images/{propId}:
  *   post:
  *    tags:
  *    - "Property"
@@ -95,9 +74,7 @@ route.post("/images/:propId", upload, async (req, res) => {
 		}
 	} catch (error) {
 		// Error for property not found in database
-		res
-			.status(404)
-			.send("property does not exist or image not uploaded \n" + error);
+		res.status(404).send("property does not exist or image not uploaded \n" + error);
 	}
 });
 

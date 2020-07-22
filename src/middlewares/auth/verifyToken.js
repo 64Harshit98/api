@@ -7,7 +7,7 @@ const verifyToken = (req, res, next) => {
 		const token = header.split(" ")[1];
 		jwt.verify(token, process.env.JWT_TOKEN_SECRET, function (err, data) {
 			if (err) {
-				req.status(403).send("Forbidden");
+				res.status(403).send("Forbidden\t" + err);
 			} else {
 				req._id = data._id;
 				req.userType = data.type;
