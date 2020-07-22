@@ -1,5 +1,6 @@
 const route = require("express").Router();
 const bookingModel = require("../../models/booking.model");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 /**
  * @swagger
@@ -12,12 +13,16 @@ const bookingModel = require("../../models/booking.model");
  *    parameters:
  *     - in: path
  *       name: bookingId
+ *     - in: header
+ *       name: auth
  *       required: true
  *    responses:
  *     '200':
  *       description: confirmed
  */
-route.put("/confirm/:bookingId", async (req, res) => {
+route.put("/confirm/:bookingId", verifyToken, async (req, res) => {
+	// Authorizing wheather a property owner
+	if (req.userType != "propOwner") return res.status(403).send(" Forbidden");
 	// Checking Booking Exist
 	try {
 		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
@@ -45,21 +50,26 @@ route.put("/confirm/:bookingId", async (req, res) => {
  *   put:
  *    tags:
  *    - "Booking"
- *    summary: for paying to confirm a booking after owner has confirmed availability
+ *    summary: Paying to confirm a booking after owner has confirmed availability
  *    parameters:
  *     - in: path
  *       name: bookingId
+ *       required: true
+ *     - in: header
+ *       name: auth
  *       required: true
  *    responses:
  *     '200':
  *       description: confirmed
  */
-route.put("/pay/:bookingId", async (req, res) => {
+route.put("/pay/:bookingId", verifyToken, async (req, res) => {
+	// Authorizing wheather a property owner
+	if (req.userType != "propOwner") return res.status(403).send(" Forbidden");
 	// Checking booking exists
 	try {
 		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
 
-		if (booking.confirmed === true) {
+		if (booking.confirmed === true && booking.userId == req._id) {
 			// Updating the value and setting to true
 			try {
 				booking.set({ paid: { status: true, at: Date.now() } });
