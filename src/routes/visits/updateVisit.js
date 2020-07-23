@@ -1,5 +1,6 @@
 const route = require("express").Router();
 const visitModel = require("../../models/visit.model");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 /**
  * @swagger
@@ -13,19 +14,20 @@ const visitModel = require("../../models/visit.model");
  *     - in: path
  *       name: visitId
  *       required: true
- *     - in: path
- *       name: userId
+ *     - in: header
+ *       name: auth
  *       required: true
  *    responses:
  *     '200':
  *       description: cancelled
  */
-route.put("/cancel/:visitId/:userId", async (req, res) => {
+route.put("/cancel/:visitId", verifyToken, async (req, res) => {
 	// Checking the visit exists
 	try {
 		const visit = await visitModel.findOne({ _id: req.params.visitId });
-		if (visit.userId == req.params.userId) {
+		if (visit.userId == req._id) {
 			visit.set({ status: "Cancelled" });
+			visit.save();
 			res.status(200).send(visit);
 		}
 	} catch (error) {
