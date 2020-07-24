@@ -1,5 +1,6 @@
 //  Load express module with `require` directive
 const express = require("express");
+const helmet = require("helmet");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const dotenv = require("dotenv");
@@ -11,6 +12,8 @@ const swaggerOptions = require("./src/configs/swaggerOptions.config");
 
 //Package Configurations
 const app = express();
+// For security
+app.use(helmet());
 dotenv.config();
 
 // Launch listening server on port 8080
