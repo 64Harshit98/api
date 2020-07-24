@@ -1,6 +1,6 @@
 const route = require("express").Router();
 const userModel = require("../../models/user.model");
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 
 /**
  * @swagger

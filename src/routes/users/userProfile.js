@@ -1,10 +1,8 @@
 const route = require("express").Router();
 const userModel = require("../../models/user.model");
-const {
-	userProfileValidation,
-} = require("../../middlewares/validators/userValidation");
+const { userProfileValidation } = require("../../middlewares/validators/userValidation");
 
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 /**
  * @swagger
  * paths:
@@ -47,10 +45,7 @@ route.get("/profile/:userId", async (req, res) => {
 	// Checking userId exists
 	if (req.params.userId) {
 		// Extracting user with the given userId
-		await userModel.find({ _id: req.params.userId }, function (
-			error,
-			userData
-		) {
+		await userModel.find({ _id: req.params.userId }, function (error, userData) {
 			if (error) {
 				res.status(404).send("User not found");
 			} else {

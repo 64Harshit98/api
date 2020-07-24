@@ -1,9 +1,7 @@
 const route = require("express").Router();
-const {
-	userLoginValidation,
-} = require("../../middlewares/validators/userValidation");
+const { userLoginValidation } = require("../../middlewares/validators/userValidation");
 const userModel = require("../../models/user.model");
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 
 /**
  * @swagger

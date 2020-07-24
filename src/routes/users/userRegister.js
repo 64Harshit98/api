@@ -1,9 +1,7 @@
 const router = require("express").Router();
-const firebaseapp = require("../../middlewares/firebaseapp");
+const firebaseapp = require("../../middlewares/firebase/firebaseapp");
 const userModel = require("../../models/user.model");
-const {
-	userRegisterValidation,
-} = require("../../middlewares/validators/userValidation");
+const { userRegisterValidation } = require("../../middlewares/validators/userValidation");
 const bcrypt = require("bcryptjs");
 
 /**
