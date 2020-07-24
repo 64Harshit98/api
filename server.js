@@ -41,6 +41,9 @@ mongoose.connect(
 app.use(bodyParser.json());
 
 // Routes
+app.get("/", (req, res) => {
+	res.send(`<h1>Welcome To Home</h1>`);
+});
 require("./src/routes")(app);
 
 // This matches all routes and all methods
