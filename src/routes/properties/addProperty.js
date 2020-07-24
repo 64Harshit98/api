@@ -24,8 +24,13 @@ const { verifyToken } = require("../../middlewares/auth/verifyToken");
  */
 route.post("/add", verifyToken, async (req, res) => {
 	if (req._id) {
+		// Creating Property object
+		const varProperty = {
+			...req.body,
+			ownerId: req._id,
+		};
 		// Validating request body
-		const { error, value } = propertyValidation(req.body);
+		const { error, value } = propertyValidation(varProperty);
 		if (error) return res.status(400).send(error.details);
 
 		try {
