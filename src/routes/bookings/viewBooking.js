@@ -1,4 +1,5 @@
 const bookingModel = require("../../models/booking.model");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 const route = require("express").Router();
 

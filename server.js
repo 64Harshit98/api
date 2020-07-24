@@ -1,5 +1,6 @@
 //  Load express module with `require` directive
 const express = require("express");
+const helmet = require("helmet");
 const swaggerJsDoc = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const dotenv = require("dotenv");
@@ -11,6 +12,8 @@ const swaggerOptions = require("./src/configs/swaggerOptions.config");
 
 //Package Configurations
 const app = express();
+// For security
+app.use(helmet());
 dotenv.config();
 
 // Launch listening server on port 8080
@@ -38,6 +41,9 @@ mongoose.connect(
 app.use(bodyParser.json());
 
 // Routes
+app.get("/", (req, res) => {
+	res.send(`<h1>Welcome To Home</h1>`);
+});
 require("./src/routes")(app);
 
 // This matches all routes and all methods

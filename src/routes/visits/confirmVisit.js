@@ -1,5 +1,6 @@
 const route = require("express").Router();
 const visitModel = require("../../models/visit.model");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 /**
  * @swagger
@@ -8,8 +9,11 @@ const visitModel = require("../../models/visit.model");
  *   put:
  *    tags:
  *    - "Visit"
- *    summary: for approving a visit request by property owner
+ *    summary: For approving a visit request by property owner
  *    parameters:
+ *     - in: header
+ *       name: auth
+ *       required: true
  *     - in: path
  *       name: visitId
  *       required: true
@@ -31,7 +35,9 @@ const visitModel = require("../../models/visit.model");
  *     '200':
  *       description: confirmed
  */
-route.put("/confirm/:visitId", async (req, res) => {
+route.put("/confirm/:visitId", verifyToken, async (req, res) => {
+	// authorizing property owner
+	if (req.userType == "tenant") return res.status(403).send("Forbidden");
 	// Find the visit
 	try {
 		const visit = await visitModel.findOne({ _id: req.params.visitId });
@@ -50,14 +56,15 @@ route.put("/confirm/:visitId", async (req, res) => {
 				}
 			});
 			try {
-				visit.overwrite({ selected: selectArray });
+				visit.set({ selected: selectArray });
 				visit.save();
 				res.status(200).send(visit);
 			} catch (error) {
 				res.status(400).send(error);
 			}
+		} else {
+			res.status(404).send("Not Found");
 		}
-		res.status(404).send("Not Found");
 	} catch (error) {
 		res.status(400).send(error);
 	}
@@ -72,6 +79,9 @@ route.put("/confirm/:visitId", async (req, res) => {
  *    - "Visit"
  *    summary: paying for a visit request
  *    parameters:
+ *     - in: header
+ *       name: auth
+ *       required: true
  *     - in: path
  *       name: visitId
  *       required: true
@@ -79,10 +89,12 @@ route.put("/confirm/:visitId", async (req, res) => {
  *     '200':
  *       description: confirmed
  */
-route.put("/pay/:visitId", async (req, res) => {
+route.put("/pay/:visitId", verifyToken, async (req, res) => {
 	// Find the visit
 	try {
 		const visit = await visitModel.findOne({ _id: req.params.visitId });
+
+		if (visit.userId != req._id) return res.status(403).send(" Forbidden");
 		// Paying for the visit
 		if (visit.paid == false) {
 			try {
@@ -92,8 +104,9 @@ route.put("/pay/:visitId", async (req, res) => {
 			} catch (error) {
 				res.status(400).send(error);
 			}
+		} else {
+			res.status(400).send("Already Paid | Not ");
 		}
-		res.status(400).send("Already Paid");
 	} catch (error) {
 		res.status(400).send(error);
 	}

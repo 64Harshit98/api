@@ -1,9 +1,5 @@
 const MainVisitRouter = require("express").Router();
 
-MainVisitRouter.get("/", (req, res) => {
-	res.status(200).send("Inside vists 💳");
-});
-
 // For scheduling a visit to properties
 MainVisitRouter.route("/schedule").post(require("./createVisit"));
 

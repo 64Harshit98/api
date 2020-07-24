@@ -59,54 +59,57 @@ const mongoose = require("mongoose");
  *      items:
  *       type: String
  */
-const propFacilitiesSchema = new mongoose.Schema({
-	food: {
-		meals: {
+const propFacilitiesSchema = new mongoose.Schema(
+	{
+		food: {
+			meals: {
+				type: [String],
+				enum: ["Breakfast", "Lunch", "Snacks", "Dinner"],
+			},
+			cost: {
+				type: Number,
+			},
+			diet: {
+				type: String,
+				enum: ["Non-Vegitarian", "Vegitarian", "Eggitarian"],
+			},
+			info: {
+				type: String,
+			},
+		},
+		wifi: {
+			desc: {
+				type: String,
+			},
+			limit: {
+				type: Number,
+			},
+			cost: {
+				type: Number,
+			},
+		},
+		laundry: {
+			desc: {
+				type: String,
+			},
+			limit: {
+				type: String,
+			},
+			cost: {
+				type: Number,
+			},
+		},
+		commonFacilities: {
 			type: [String],
-			enum: ["Breakfast", "Lunch", "Snacks", "Dinner"],
 		},
-		cost: {
-			type: Number,
+		sportsFacilities: {
+			type: [String],
 		},
-		diet: {
-			type: String,
-			enum: ["Non-Vegitarian", "Vegitarian", "Eggitarian"],
-		},
-		info: {
-			type: String,
+		security: {
+			type: [String],
 		},
 	},
-	wifi: {
-		desc: {
-			type: String,
-		},
-		limit: {
-			type: Number,
-		},
-		cost: {
-			type: Number,
-		},
-	},
-	laundry: {
-		desc: {
-			type: String,
-		},
-		limit: {
-			type: String,
-		},
-		cost: {
-			type: Number,
-		},
-	},
-	commonFacilities: {
-		type: [String],
-	},
-	sportsFacilities: {
-		type: [String],
-	},
-	security: {
-		type: [String],
-	},
-});
+	{ _id: false }
+);
 
 module.exports = propFacilitiesSchema;

@@ -1,5 +1,6 @@
 const route = require("express").Router();
 const bookingModel = require("../../models/booking.model");
+const { verifyToken } = require("../../middlewares/auth/verifyToken");
 
 /**
  * @swagger
@@ -13,32 +14,33 @@ const bookingModel = require("../../models/booking.model");
  *     - in: path
  *       name: bookingId
  *       required: true
+ *     - in: header
+ *       name: auth
+ *       required: true
  *    requestBody:
- *     description: userId and reason
+ *     description:  reason
  *     content:
  *      application/json:
  *       schema:
  *        type: object
  *        properties:
- *         userId:
- *          type: string
  *         reason:
  *          type: string
  *    responses:
  *     '201':
  *       description: cancelled
  */
-route.put("/cancel/:bookingId", async (req, res) => {
+route.put("/cancel/:bookingId", verifyToken, async (req, res) => {
 	// Check booking Exists
 	try {
 		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
 
-		if (booking.paid.status === false && booking.userId == req.body.userId) {
+		if (booking.paid.status === false && booking.userId == req._id) {
 			booking.set({ cancelled: { status: true, reason: req.body.reason } });
 			booking.save();
 			res.status(201).send(booking);
 		} else {
-			res.status(404).send("Not found Paid contact owner");
+			res.status(404).send("Not found | Paid contact owner");
 		}
 	} catch (error) {
 		res.status(400).send(error);
@@ -56,6 +58,9 @@ route.put("/cancel/:bookingId", async (req, res) => {
  *     - in: path
  *       name: bookingId
  *       required: true
+ *     - in: header
+ *       name: auth
+ *       required: true
  *    requestBody:
  *     description: propId
  *     content:
@@ -69,7 +74,10 @@ route.put("/cancel/:bookingId", async (req, res) => {
  *     '201':
  *       description: cancelled
  */
-route.put("/notavailable/:bookingId", async (req, res) => {
+route.put("/notavailable/:bookingId", verifyToken, async (req, res) => {
+	// Authorizing property owner
+	if (req.userType != "propOwner" || req.userType != "admin")
+		return res.status(403).send(" Forbidden");
 	// Check booking Exists
 	try {
 		const booking = await bookingModel.findOne({ _id: req.params.bookingId });
